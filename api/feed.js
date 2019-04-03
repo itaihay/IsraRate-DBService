@@ -126,11 +126,15 @@ router
     .delete(api.delete);
 
 router
+    .route(`/${ApiModule}/GetRawFeedCount`)
+    .get(api.getRawFeedCount())
+
+/* router
     .route(`/${ApiModule}s`)
     .get(api.getAll)
     .post(upload.single('file'), routeSanity.checkFile, api.addBulk)
     .put(routeSanity.checkData, upload.single('file'), routeSanity.checkFile, api.editBulk)
-    .delete(api.deleteBulk);
+    .delete(api.deleteBulk); */
 
 router.route(`/${ApiModule}s/search`)
     .get(api.search)

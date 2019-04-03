@@ -21,7 +21,7 @@ const ModelOptions = {
 */
 
 // ALL
-api.getAll = (skip, limit) => {
+api.getRawFeedCount = (skip, limit) => {
 
     let res = {
         data: {},
@@ -42,6 +42,28 @@ api.getAll = (skip, limit) => {
         });
 
 };
+
+/* api.getAll = (skip, limit) => {
+
+    let res = {
+        data: {},
+        count: 0
+    };
+
+    return Model.find()
+        .limit(limit)
+        .skip(skip) 
+        .exec()
+        .then((list) => {
+            res.data = list;
+            return Model.count();
+        })
+        .then(count => {
+            res.count = count;
+            return res;
+        });
+
+}; */
 
 // GET
 api.get = (count) => {
