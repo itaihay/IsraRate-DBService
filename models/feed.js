@@ -52,6 +52,13 @@ let fields = {
 		type: Number, 
 		mutable: true, 
 		search: true
+	},
+
+		isRaw: { 
+			type: Boolean, 
+			default: true,
+			mutable: true, 
+			search: true
 	}
     
 };
