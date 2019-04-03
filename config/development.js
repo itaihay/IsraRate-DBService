@@ -5,13 +5,13 @@ var config = require('./global');
 //  ======[ DATABASE ]======
 
 config.db.credential.database = 'IsraRateDB';
-config.db.credential.host = '157.230.111.205';
+config.db.credential.host = 'israratedb-cluster-eak9r.mongodb.net';
 
 config.db.options.createIndexes = true;
 config.db.options.poolSize = 10;
 
 //  ======[ ADDRESS ]======
-config.serverIp = '157.230.111.205';
+config.serverIp = 'israratedb-cluster-eak9r.mongodb.net';
 config.serverPort = 27017;
 config.redisPort = 6379;
 

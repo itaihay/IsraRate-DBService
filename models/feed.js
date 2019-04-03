@@ -56,7 +56,7 @@ let fields = {
     
 };
 
-let ModelSchema = new Schema(fields);
+let ModelSchema = new Schema(fields,{ collection: 'RawData' });
 
 // Helper Functions 
 ModelSchema.statics.GetFieldsByOption = function (fieldOptionName) {
