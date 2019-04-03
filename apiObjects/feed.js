@@ -21,7 +21,7 @@ const ModelOptions = {
 */
 
 // getRawFeed
-api.getRawFeed = (limit) => {
+api.get = (isRaw,limit) => {
 
     let res = {
         data: {},
@@ -64,7 +64,7 @@ api.getRawFeed = (limit) => {
 }; */
 
 // GET
-api.get = (id) => {
+/* api.get = (id) => {
     return Model.findOne({
         '_id': id
     }) 
@@ -75,7 +75,7 @@ api.get = (id) => {
 
         return data;
     });
-};
+}; */
 
 // POST
 api.add = (data) => {

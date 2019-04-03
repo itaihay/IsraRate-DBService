@@ -25,7 +25,7 @@ let api = {};
 api.getRawFeedCount = (req, res) => {
     var limit = (req.query.limit || 10) * 1;
 
-    ApiObj.GetRawFeed(limit)
+    ApiObj.get(false, limit)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(500).json(l.res(err, [])));
 };
