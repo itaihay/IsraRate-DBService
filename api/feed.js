@@ -21,6 +21,15 @@ let api = {};
 
 /* ========= [ CORE APIs ] ========= */
 
+// GET RAW FEED COUNT
+api.getRawFeedCount = (req, res) => {
+    var limit = (req.query.limit || 10) * 1;
+
+    ApiObj.GetRawFeed(limit)
+        .then(data => res.status(200).json(l.res(false, data)))
+        .catch(err => res.status(500).json(l.res(err, [])));
+};
+
 // GET ALL
 api.getAll = (req, res) => {
     var skip = (req.query.skip || 0) * 1,
@@ -126,8 +135,8 @@ router
     .delete(api.delete);
 
 router
-    .route(`/${ApiModule}/GetRawFeedCount`)
-    .get(api.getRawFeedCount())
+    .route(`/${ApiModule}/GetRawFeedCount:limit`)
+    .get(api.getRawFeedCount);
 
 /* router
     .route(`/${ApiModule}s`)

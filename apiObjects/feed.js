@@ -20,8 +20,8 @@ const ModelOptions = {
 ========= [ CORE METHODS ] =========
 */
 
-// ALL
-api.getRawFeedCount = (skip, limit) => {
+// getRawFeed
+api.getRawFeed = (limit) => {
 
     let res = {
         data: {},
@@ -30,7 +30,6 @@ api.getRawFeedCount = (skip, limit) => {
 
     return Model.find()
         .limit(limit)
-        .skip(skip) 
         .exec()
         .then((list) => {
             res.data = list;
@@ -40,7 +39,6 @@ api.getRawFeedCount = (skip, limit) => {
             res.count = count;
             return res;
         });
-
 };
 
 /* api.getAll = (skip, limit) => {
@@ -66,7 +64,7 @@ api.getRawFeedCount = (skip, limit) => {
 }; */
 
 // GET
-api.get = (count) => {
+api.get = (id) => {
     return Model.findOne({
         '_id': id
     }) 
