@@ -1,6 +1,6 @@
 'use strict';
 
-// Module dependencies.
+// Dependencies
 const mongoose = require('mongoose'),
     Model = mongoose.models.Feed,
     api = {};
@@ -44,7 +44,7 @@ api.getAll = (skip, limit) => {
 };
 
 // GET
-api.get = (id) => {
+api.get = (count) => {
     return Model.findOne({
         '_id': id
     }) 
@@ -189,10 +189,6 @@ api.searchAdvanced = (skip, limit, data) => {
         }
     });
 
-    // debug('Modelfields.search: %o', ModelOptions.search);
-    // debug('data: %o', data);
-    // debug('searchObj: %o', searchObj);
-
     if (!searchObj || searchObj.length === 0) {
         return Promise.resolve([]);
     }
@@ -206,7 +202,6 @@ api.searchAdvanced = (skip, limit, data) => {
 };
 
 //TEST
-//New Callback System in TEST, which returns a ResponseClass object's Output
 api.test = () => {
     return new Promise.resolve({
         msg: 'yo'

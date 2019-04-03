@@ -1,6 +1,6 @@
 'use strict';
 
-// Module dependencies.
+// Dependencies
 const express = require('express'),
     router = express.Router(),
     ApiModule = 'feed',
@@ -75,9 +75,6 @@ api.search = (req, res) => {
         k[k1[0]] = k1[1];
     });
 
-    // debug('keyword: %o', keyword);
-    // debug('k: %o', k);
-
     ApiObj.search(skip, limit, k, strict)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
@@ -144,23 +141,5 @@ router.get(`/${ApiModule}s/test`, (req, res) => {
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
 });
-
-
-/*
-SEARCH
-e.g.: GET /api/ApiObjs/search?keyword=first:Sam,last:Jones
-
-SEARCH ADVANCED
-e.g.: POST /api/ApiObjs/search?skip=0,limit=1
-{
-    "data":{
-        "name": { "search":"single","value":"deb"},
-        "price": { "search":"range","value":[25,28]},
-        "color": {"search":"array","value":["red","green"]},
-        "visited": { "valueNot": ['Tokyo','LA']}
-    }
-}
-*/
-
 
 module.exports = router;
