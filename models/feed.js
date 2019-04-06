@@ -63,7 +63,7 @@ let fields = {
     
 };
 
-let ModelSchema = new Schema(fields,{ collection: 'RawData' });
+let ModelSchema = new Schema(fields,{ collection: 'feeds' });
 
 // Helper Functions 
 ModelSchema.statics.GetFieldsByOption = function (fieldOptionName) {

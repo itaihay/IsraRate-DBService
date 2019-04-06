@@ -30,7 +30,7 @@ api.getRawFeedCount = (req, res) => {
         .catch(err => res.status(500).json(l.res(err, [])));
 };
 
-// GET ALL
+/* // GET ALL
 api.getAll = (req, res) => {
     var skip = (req.query.skip || 0) * 1,
         limit = (req.query.limit || 10) * 1;
@@ -38,7 +38,7 @@ api.getAll = (req, res) => {
     ApiObj.getAll(skip, limit)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(500).json(l.res(err, [])));
-};
+}; */
 
 // POST
 api.add = (req, res) => {

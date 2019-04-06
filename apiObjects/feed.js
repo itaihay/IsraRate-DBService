@@ -77,11 +77,15 @@ api.get = (isRaw,limit) => {
     });
 }; */
 
-// POST
+// Add (array)
 api.add = (data) => {
-    data = new Model(data);
-    return data.save()
-        .then(() => data.toObject());
+    data.forEach((post) => {
+        dataToSave = new Model(post);
+        dataToSave.save()
+            .then(() => dataToSave.toObject());
+    });
+
+    return true;
 };
 
 // PUT
