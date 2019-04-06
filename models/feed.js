@@ -59,7 +59,14 @@ let fields = {
 			default: true,
 			mutable: true, 
 			search: true
-	}
+	},
+
+		score: { 
+			type: Number, 
+			default: 0,
+			mutable: true, 
+			search: true
+}
     
 };
 

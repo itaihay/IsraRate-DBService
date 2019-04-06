@@ -55,7 +55,7 @@ api.add = (req, res) => {
 }; */
 
 // PUT
-api.edit = (req, res) => {
+api.postScoreData = (req, res) => {
     return ApiObj.edit(req.params.id, req.body.data)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
@@ -137,6 +137,10 @@ router.post(`/${ApiModule}`, routeSanity.checkData, api.add);
 router
     .route(`/${ApiModule}/GetRawFeedCount`)
     .get(api.getRawFeedCount);
+
+router
+.route(`/${ApiModule}/postScoreData`)
+.post(api.postScoreData);
 
 /* router
     .route(`/${ApiModule}s`)
