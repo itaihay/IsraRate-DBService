@@ -21,7 +21,7 @@ const ModelOptions = {
 */
 
 // getRawFeed
-api.get = (isRaw,limit) => {
+api.get = (setRawData,limit) => {
 
     let res = {
         data: {},
@@ -32,8 +32,19 @@ api.get = (isRaw,limit) => {
         .limit(limit)
         .exec()
         .then((list) => {
+            
+            if(setRawData)
+            {
+                list.forEach(item => 
+                    {
+                        item.isRaw = true; 
+                        item.save();
+                    }
+                );
+            }
+
             res.data = list;
-            return Model.count();
+            return Model.estimatedDocumentCount();
         })
         .then(count => {
             res.count = count;
@@ -79,11 +90,11 @@ api.get = (isRaw,limit) => {
 
 // Add (array)
 api.add = (data) => {
-    data.forEach((post) => {
-        dataToSave = new Model(post);
-        dataToSave.save()
-            .then(() => dataToSave.toObject());
-    });
+    data.save();//.forEach((post) => {
+    //     dataToSave = new Model(post);
+    //     dataToSave.save()
+    //         .then(() => dataToSave.toObject());
+    // });
 
     return true;
 };
