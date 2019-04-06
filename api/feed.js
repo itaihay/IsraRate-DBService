@@ -48,11 +48,11 @@ api.add = (req, res) => {
 };
 
 // GET
-api.get = (req, res) => {
+/* api.get = (req, res) => {
     ApiObj.get(req.params.id)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
-};
+}; */
 
 // PUT
 api.edit = (req, res) => {
@@ -62,11 +62,11 @@ api.edit = (req, res) => {
 };
 
 // DELETE
-api.delete = (req, res) => {
+/* api.delete = (req, res) => {
     return ApiObj.delete(req.params.id)
         .then(data => res.status(202).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
-};
+}; */
 
 
 /* ========= [ SEARCH APIs ] ========= */
@@ -128,14 +128,14 @@ api.deleteBulk = (req, res) => {
 
 router.post(`/${ApiModule}`, routeSanity.checkData, api.add);
 
-router
+/* router
     .route(`/${ApiModule}/:id`)
     .get(api.get)
     .put(routeSanity.checkData, api.edit)
-    .delete(api.delete);
+    .delete(api.delete); */
 
 router
-    .route(`/${ApiModule}/GetRawFeedCount:limit`)
+    .route(`/${ApiModule}/GetRawFeedCount`)
     .get(api.getRawFeedCount);
 
 /* router
