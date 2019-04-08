@@ -142,4 +142,26 @@ router.get(`/${ApiModule}s/test`, (req, res) => {
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
 });
 
+router.get(`/${ApiModule}s/ScoreRange`, function (req, res) {
+    let fromDate = req.query.fromDate;
+    let toDate   = req.query.toDate;
+
+    if (fromDate) {
+        fromDate = Date.parse(fromDate);
+        if (toDate) {
+            toDate = Date.parse(toDate);
+        } else {
+            toDate = Date.now();
+        }
+    }
+
+    if (isNaN(fromDate) || isNaN(toDate)) {
+        res.sendStatus(400);
+    } else {
+        ApiObj.getScoreRange(fromDate, toDate)
+            .then(data => {res.json(data)})
+            .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, [])));
+    }
+});
+
 module.exports = router;
