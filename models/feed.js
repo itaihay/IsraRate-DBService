@@ -54,7 +54,7 @@ let fields = {
 		search: true
 	},
 
-		score: { 
+		tag: { 
 			type: Number, 
 			default: -100,
 			mutable: true, 

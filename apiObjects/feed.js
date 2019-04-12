@@ -38,7 +38,7 @@ api.get = (isRaw,limit) => {
     {
         query = 
         {
-            "Score": {"$ne": -1000}
+            "tag": {"$ne": -1000}
         };
     }
 
