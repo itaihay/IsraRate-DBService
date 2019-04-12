@@ -21,28 +21,31 @@ const ModelOptions = {
 */
 
 // getRawFeed
-api.get = (setRawData,limit) => {
+api.get = (isRaw,limit) => {
 
     let res = {
         data: {},
         count: 0
     };
 
-    return Model.find()
+    let query = null;
+
+    if(isRaw)
+    {
+        query = {"score":-100};
+    }
+    else
+    {
+        query = 
+        {
+            "Score": {"$ne": -1000}
+        };
+    }
+
+    return Model.find(query)
         .limit(limit)
         .exec()
         .then((list) => {
-            
-            if(setRawData)
-            {
-                list.forEach(item => 
-                    {
-                        item.isRaw = true; 
-                        item.save();
-                    }
-                );
-            }
-
             res.data = list;
             return Model.estimatedDocumentCount();
         })
