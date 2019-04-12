@@ -21,7 +21,7 @@ const ModelOptions = {
 */
 
 // getRawFeed
-api.get = (isRaw,limit) => {
+api.get = (isRaw,limit,fromDate,toDate) => {
 
     let res = {
         data: {},
@@ -36,17 +36,24 @@ api.get = (isRaw,limit) => {
     }
     else
     {
-        query = 
+        if(fromDate && toDate)
         {
-            "tag": {"$ne": -1000}
-        };
+            query = 
+            {
+                "tag": {"$ne": -100},
+                "created_at": {
+                    "$gt":  fromDate,
+                    "$lt":  toDate
+                }
+            };
+        }
     }
 
     return Model.find(query)
         .limit(limit)
         .exec()
         .then((list) => {
-            res.data = list;
+            res.tweets = list;
             return Model.estimatedDocumentCount();
         })
         .then(count => {
@@ -54,42 +61,6 @@ api.get = (isRaw,limit) => {
             return res;
         });
 };
-
-/* api.getAll = (skip, limit) => {
-
-    let res = {
-        data: {},
-        count: 0
-    };
-
-    return Model.find()
-        .limit(limit)
-        .skip(skip) 
-        .exec()
-        .then((list) => {
-            res.data = list;
-            return Model.count();
-        })
-        .then(count => {
-            res.count = count;
-            return res;
-        });
-
-}; */
-
-// GET
-/* api.get = (id) => {
-    return Model.findOne({
-        '_id': id
-    }) 
-    .then(data => {
-        if (!data) {
-            return Promise.reject(404);
-        }
-
-        return data;
-    });
-}; */
 
 // Add (array)
 api.add = (data) => {
@@ -128,128 +99,6 @@ api.edit = (dataArray) => {
     });
 
     return returnObj;
-};
-
-// DELETE
-api.delete = (id) => {
-    return Model.deleteOne({
-        _id: id
-    }).then(() => {
-        return `The data got Deleted`;
-    });
-};
-
-
-/*
-========= [ BULK METHODS ] =========
-*/
-
-
-//BULK ADD
-api.addBulk = (file) => {
-    const csvFilePath = file.path;
-    return csvReader()
-        .fromFile(csvFilePath)
-        .then(jsonData => Model.insertMany(jsonData))
-        .then(insertData => api.dataResultMap(insertData));
-};
-
-//BULK EDIT
-api.editBulk = (condition, file) => {
-    const csvFilePath = file.path;
-    return csvReader()
-        .fromFile(csvFilePath)
-        .then(jsonData => Model.updateMany(condition, jsonData))
-        .then(insertData => api.dataResultMap(insertData));
-};
-
-//BULK DELETE
-api.deleteBulk = () => {
-    return Model.remove({}).then(() => `All items got Deleted`);
-};
-
-
-/*
-========= [ SEARCH METHODS ] =========
-*/
-
-// SEARCH
-api.search = (skip, limit, keywordObj, strict) => {
-    let k = {};
-
-    if (strict) {
-        k = keywordObj;
-    } else {
-        Object.keys(keywordObj).forEach(key => {
-            if (isNaN(keywordObj[key])) {
-                k[key] = new RegExp(keywordObj[key], 'i');
-            } else {
-                k[key] = keywordObj[key];
-            }
-        });
-    }
-
-    return Model.find(k)
-        .limit(limit * 1)
-        .skip(skip * 1)
-        .exec();
-};
-
-// SEARCH ADVANCED
-api.searchAdvanced = (skip, limit, data) => {
-    let searchObj = [];
-
-    ModelOptions.search.forEach(prop => {
-        if (typeof data[prop] !== 'undefined') {
-            //let negate = data[prop].negate || false;
-
-            switch (data[prop].search) {
-                case 'single':
-                    searchObj.push({
-                        [prop]: new RegExp(data[prop].value, 'i')
-                    });
-                    break;
-                case 'range':
-                    searchObj.push({
-                        [prop]: {
-                            $gte: data[prop].value[0] || Number.MAX_SAFE_INTEGER
-                        }
-                    });
-
-                    searchObj.push({
-                        [prop]: {
-                            $lte: data[prop].value[1] || Number.MIN_SAFE_INTEGER
-                        }
-                    });
-                    break;
-                case 'array':
-                    searchObj.push({
-                        [prop]: {
-                            $in: [].concat(data[prop].value)
-                        }
-                    });
-                    break;
-            }
-        }
-    });
-
-    if (!searchObj || searchObj.length === 0) {
-        return Promise.resolve([]);
-    }
-    
-    return Model.find({
-            $and: searchObj
-        })
-        .skip(skip * 1)
-        .limit(limit * 1)
-        .exec();
-};
-
-//TEST
-api.test = () => {
-    return new Promise.resolve({
-        msg: 'yo'
-    });
 };
 
 /*
