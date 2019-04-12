@@ -6,7 +6,8 @@ const express = require('express'),
     ApiModule = 'feed',
     ApiObj = require(`../apiObjects/${ApiModule}`),
     debug = require('debug')(`App:Api:${ApiModule}`),
-    routeSanity = require('../middleware/routeSanity');
+    routeSanity = require('../middleware/routeSanity'),
+    l = require('../config').util;
 
 const multer = require('multer'),
     upload = multer({
