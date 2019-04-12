@@ -93,11 +93,12 @@ api.get = (isRaw,limit) => {
 
 // Add (array)
 api.add = (data) => {
-    data.save();//.forEach((post) => {
-    //     dataToSave = new Model(post);
-    //     dataToSave.save()
-    //         .then(() => dataToSave.toObject());
-    // });
+    data.forEach((post) => {
+        dataToSave = new Model(post);
+        dataToSave.tag = -100; //TODO
+        dataToSave.save()
+            .then(() => dataToSave.toObject());
+     });
 
     return true;
 };
