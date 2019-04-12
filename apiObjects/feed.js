@@ -32,7 +32,7 @@ api.get = (isRaw,limit,fromDate,toDate) => {
 
     if(isRaw)
     {
-        query = {"score":-100};
+        query = {"tag":-100};
     }
     else
     {
@@ -49,7 +49,7 @@ api.get = (isRaw,limit,fromDate,toDate) => {
         }
     }
 
-    return Model.find(query)
+     return Model.find(query)
         .limit(limit)
         .exec()
         .then((list) => {
