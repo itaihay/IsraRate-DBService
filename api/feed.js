@@ -7,7 +7,6 @@ const express = require('express'),
     ApiObj = require(`../apiObjects/${ApiModule}`),
     debug = require('debug')(`App:Api:${ApiModule}`),
     routeSanity = require('../middleware/routeSanity'),
-    l = require('../config').util;
 
 const multer = require('multer'),
     upload = multer({
@@ -25,7 +24,7 @@ let api = {};
 api.getRawFeedCount = (req, res) => {
     var limit = (req.query.limit || 10) * 1;
 
-    ApiObj.get(false, limit)
+    ApiObj.get(true, limit)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(500).json(l.res(err, [])));
 };
@@ -101,7 +100,24 @@ api.deleteBulk = (req, res) => {
 
 /* =====================  ROUTES  ===================== */
 
-router.post(`/${ApiModule}`, routeSanity.checkData, api.add);
+router
+    .route(`/${ApiModule}/GetRawFeedCount`)
+    .get(api.getRawFeedCount);
+
+router
+    .route(`/${ApiModule}/Add`)
+    .put(api.add);
+
+router
+    .route(`/${ApiModule}/SetScore`)
+    .put(api.edit);
+
+router
+    .route(`/${ApiModule}/GetScoredFeed`)
+    .get(api.getScoredFeedDates);
+    
+
+//router.post(`/${ApiModule}`, routeSanity.checkData, api.add);
 
 /* router
     .route(`/${ApiModule}/:id`)
@@ -109,9 +125,7 @@ router.post(`/${ApiModule}`, routeSanity.checkData, api.add);
     .put(routeSanity.checkData, api.edit)
     .delete(api.delete); */
 
-router
-    .route(`/${ApiModule}/GetRawFeedCount`)
-    .get(api.getRawFeedCount);
+
 
 router
 .route(`/${ApiModule}/postScoreData`)
