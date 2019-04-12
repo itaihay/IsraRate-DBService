@@ -30,16 +30,6 @@ api.getRawFeedCount = (req, res) => {
         .catch(err => res.status(500).json(l.res(err, [])));
 };
 
-/* // GET ALL
-api.getAll = (req, res) => {
-    var skip = (req.query.skip || 0) * 1,
-        limit = (req.query.limit || 10) * 1;
-
-    ApiObj.getAll(skip, limit)
-        .then(data => res.status(200).json(l.res(false, data)))
-        .catch(err => res.status(500).json(l.res(err, [])));
-}; */
-
 // POST
 api.add = (req, res) => {
     ApiObj.add(req.body.data)
@@ -47,27 +37,12 @@ api.add = (req, res) => {
         .catch(err => res.status(500).json(l.res(err, null)));
 };
 
-// GET
-/* api.get = (req, res) => {
-    ApiObj.get(req.params.id)
-        .then(data => res.status(200).json(l.res(false, data)))
-        .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
-}; */
-
 // PUT
 api.postScoreData = (req, res) => {
     return ApiObj.edit(req.params.id, req.body.data)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
 };
-
-// DELETE
-/* api.delete = (req, res) => {
-    return ApiObj.delete(req.params.id)
-        .then(data => res.status(202).json(l.res(false, data)))
-        .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
-}; */
-
 
 /* ========= [ SEARCH APIs ] ========= */
 
