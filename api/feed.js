@@ -37,8 +37,8 @@ api.add = (req, res) => {
 };
 
 // PUT
-api.postScoreData = (req, res) => {
-    return ApiObj.edit(req.params.id, req.body.data)
+api.setScore = (req, res) => {
+    return ApiObj.edit(req.body.data)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
 };

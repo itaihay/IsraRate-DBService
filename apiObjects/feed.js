@@ -104,25 +104,30 @@ api.add = (data) => {
 };
 
 // PUT
-api.edit = (id, updateData) => {
+api.edit = (dataArray) => {
 
-    let finalData = {};
-    ModelOptions.mutable.forEach(prop => {
-        if (typeof updateData[prop] !== 'undefined') {
-            finalData[prop] = updateData[prop];
-        }
+    dataArray.tweets.array.forEach(updateData => {
+    
+        let finalData = {};
+        ModelOptions.mutable.forEach(prop => {
+            if (typeof updateData[prop] !== 'undefined') {
+                finalData[prop] = updateData[prop];
+            }
+        });
+
+        return Model.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: finalData
+            }, {
+                new: true
+            })
+            .then(data => {
+                returnObj = returnObj && (data.toObject() || null);
+            }); // eo Model.findOneAndUpdate
     });
 
-    return Model.findOneAndUpdate({
-            _id: id
-        }, {
-            $set: finalData
-        }, {
-            new: true
-        })
-        .then(data => {
-            return data.toObject() || null;
-        }); // eo Model.findOneAndUpdate
+    return returnObj;
 };
 
 // DELETE
