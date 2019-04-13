@@ -31,7 +31,7 @@ config.db = {
 config.address = {
     version: '0.0.1',
     domain: 'http://israrate-dbservice.com',
-    serverPort: 80,
+    serverPort: process.env.PORT || 80,
     redisPort: 6379
 };
 
