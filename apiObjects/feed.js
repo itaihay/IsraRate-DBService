@@ -64,9 +64,13 @@ api.get = (isRaw,limit,fromDate,toDate) => {
 
 // Add (array)
 api.add = (data) => {
+
+    let dataToSave = null; 
+
     data.forEach((post) => {
         dataToSave = new Model(post);
         dataToSave.tag = -100; //TODO
+        dataToSave.created_at = Date.now();
         dataToSave.save()
             .then(() => dataToSave.toObject());
      });
