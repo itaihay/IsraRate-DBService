@@ -21,7 +21,7 @@ const ModelOptions = {
 */
 
 // getRawFeed
-api.get = (isRaw,limit,fromDate,toDate) => {
+api.get = (isRaw, limit, fromDate, toDate) => {
 
     let res = {
         data: {},
@@ -30,26 +30,23 @@ api.get = (isRaw,limit,fromDate,toDate) => {
 
     let query = null;
 
-    if(isRaw)
-    {
-        query = {"tag":-100};
+    if (isRaw) {
+        query = { "tag": -100 };
     }
-    else
-    {
-        if(fromDate && toDate)
-        {
-            query = 
-            {
-                "tag": {"$ne": -100},
-                "created_at": {
-                    "$gte":  new Date(fromDate).toISOString(),
-                    "$lt":  new Date(toDate).toISOString()
-                }
-            };
+    else {
+        if (fromDate && toDate) {
+            query =
+                {
+                    "tag": { "$ne": -100 },
+                    "created_at": {
+                        "$gte": new Date(fromDate).toISOString(),
+                        "$lt": new Date(toDate).toISOString()
+                    }
+                };
         }
     }
 
-     return Model.find(query)
+    return Model.find(query)
         .limit(limit)
         .exec()
         .then((list) => {
@@ -64,45 +61,26 @@ api.get = (isRaw,limit,fromDate,toDate) => {
 
 // Add (array)
 api.add = (data) => {
-
-    let dataToSave = null; 
-
-    data.forEach((post) => {
-        dataToSave = new Model(post);
-        dataToSave.tag = -100; //TODO
-        dataToSave.created_at = Date.now();
-        dataToSave.save()
-            .then(() => dataToSave.toObject());
-     });
-
-    return true;
+    return Model.insertMany(data);
 };
 
 // PUT
-api.edit = (dataArray) => {
-
-    dataArray.tweets.array.forEach(updateData => {
-    
-        let finalData = {};
-        ModelOptions.mutable.forEach(prop => {
-            if (typeof updateData[prop] !== 'undefined') {
-                finalData[prop] = updateData[prop];
-            }
-        });
-
-        return Model.findOneAndUpdate({
-                _id: id
+api.setTagArray = (dataArray) => { 
+    return Promise.all(
+        dataArray.map(updateData => {
+            
+            Model.findOneAndUpdate({
+                id: updateData.id
             }, {
-                $set: finalData
-            }, {
-                new: true
-            })
-            .then(data => {
-                returnObj = returnObj && (data.toObject() || null);
-            }); // eo Model.findOneAndUpdate
-    });
-
-    return returnObj;
+                    $set: { "tag": updateData.tag }
+                }, {
+                    new: true
+                })
+                .then(data => {
+                    (data.toObject() || null);
+                });
+        })
+    );
 };
 
 /*

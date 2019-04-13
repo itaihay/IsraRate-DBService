@@ -46,8 +46,8 @@ api.add = (req, res) => {
 };
 
 // PUT
-api.edit = (req, res) => {
-    return ApiObj.edit(req.body.data)
+api.setTagArray = (req, res) => {
+    ApiObj.setTagArray(req.body.tweets)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
 };
@@ -64,7 +64,7 @@ router
 
 router
     .route(`/${ApiModule}/SetScore`)
-    .post(api.edit);
+    .post(api.setTagArray);
 
 router
     .route(`/${ApiModule}/GetScoredFeed`)
