@@ -42,8 +42,8 @@ api.get = (isRaw,limit,fromDate,toDate) => {
             {
                 "tag": {"$ne": -100},
                 "created_at": {
-                    "$gt":  fromDate,
-                    "$lt":  toDate
+                    "$gte":  new Date(fromDate).toISOString(),
+                    "$lt":  new Date(toDate).toISOString()
                 }
             };
         }
