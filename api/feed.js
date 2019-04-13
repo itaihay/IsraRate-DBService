@@ -60,11 +60,11 @@ router
 
 router
     .route(`/${ApiModule}/Add`)
-    .put(api.add);
+    .post(api.add);
 
 router
     .route(`/${ApiModule}/SetScore`)
-    .put(api.edit);
+    .post(api.edit);
 
 router
     .route(`/${ApiModule}/GetScoredFeed`)
