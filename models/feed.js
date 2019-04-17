@@ -52,11 +52,25 @@ let fields = {
 		type: Number, 
 		mutable: true, 
 		search: true
-	}
+	},
+
+		isRaw: { 
+			type: Boolean, 
+			default: true,
+			mutable: true, 
+			search: true
+	},
+
+		score: { 
+			type: Number, 
+			default: 0,
+			mutable: true, 
+			search: true
+}
     
 };
 
-let ModelSchema = new Schema(fields,{ collection: 'RawData' });
+let ModelSchema = new Schema(fields,{ collection: 'feeds' });
 
 // Helper Functions 
 ModelSchema.statics.GetFieldsByOption = function (fieldOptionName) {
