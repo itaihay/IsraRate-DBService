@@ -21,8 +21,39 @@ const ModelOptions = {
 ========= [ CORE METHODS ] =========
 */
 
-// ALL
-api.getAll = (skip, limit) => {
+// getRawFeed
+api.get = (setRawData,limit) => {
+
+    let res = {
+        data: {},
+        count: 0
+    };
+
+    return Model.find()
+        .limit(limit)
+        .exec()
+        .then((list) => {
+            
+            if(setRawData)
+            {
+                list.forEach(item => 
+                    {
+                        item.isRaw = true; 
+                        item.save();
+                    }
+                );
+            }
+
+            res.data = list;
+            return Model.estimatedDocumentCount();
+        })
+        .then(count => {
+            res.count = count;
+            return res;
+        });
+};
+
+/* api.getAll = (skip, limit) => {
 
     let res = {
         data: {},
@@ -42,10 +73,10 @@ api.getAll = (skip, limit) => {
             return res;
         });
 
-};
+}; */
 
 // GET
-api.get = (count) => {
+/* api.get = (id) => {
     return Model.findOne({
         '_id': id
     }) 
@@ -56,7 +87,8 @@ api.get = (count) => {
 
         return data;
     });
-};
+}; */
+
 
 api.getScoreRange = (fromDate, toDate) => {
     return Model.find({created_at: {$gte: fromDate, $lte: toDate}}).exec().then(function (docs, err) {
@@ -75,11 +107,15 @@ api.getScoreRange = (fromDate, toDate) => {
     });
 };
 
-// POST
+
 api.add = (data) => {
-    data = new Model(data);
-    return data.save()
-        .then(() => data.toObject());
+    data.save();//.forEach((post) => {
+    //     dataToSave = new Model(post);
+    //     dataToSave.save()
+    //         .then(() => dataToSave.toObject());
+    // });
+
+    return true;
 };
 
 // PUT

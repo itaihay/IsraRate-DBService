@@ -21,12 +21,11 @@ let api = {};
 
 /* ========= [ CORE APIs ] ========= */
 
-// GET ALL
-api.getAll = (req, res) => {
-    var skip = (req.query.skip || 0) * 1,
-        limit = (req.query.limit || 10) * 1;
+// GET RAW FEED COUNT
+api.getRawFeedCount = (req, res) => {
+    var limit = (req.query.limit || 10) * 1;
 
-    ApiObj.getAll(skip, limit)
+    ApiObj.get(false, limit)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(500).json(l.res(err, [])));
 };
@@ -38,27 +37,12 @@ api.add = (req, res) => {
         .catch(err => res.status(500).json(l.res(err, null)));
 };
 
-// GET
-api.get = (req, res) => {
-    ApiObj.get(req.params.id)
-        .then(data => res.status(200).json(l.res(false, data)))
-        .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
-};
-
 // PUT
-api.edit = (req, res) => {
+api.postScoreData = (req, res) => {
     return ApiObj.edit(req.params.id, req.body.data)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
 };
-
-// DELETE
-api.delete = (req, res) => {
-    return ApiObj.delete(req.params.id)
-        .then(data => res.status(202).json(l.res(false, data)))
-        .catch(err => res.status(err === 404 ? 404 : 500).json(l.res(err, null)));
-};
-
 
 /* ========= [ SEARCH APIs ] ========= */
 
@@ -119,18 +103,26 @@ api.deleteBulk = (req, res) => {
 
 router.post(`/${ApiModule}`, routeSanity.checkData, api.add);
 
-router
+/* router
     .route(`/${ApiModule}/:id`)
     .get(api.get)
     .put(routeSanity.checkData, api.edit)
-    .delete(api.delete);
+    .delete(api.delete); */
 
 router
+    .route(`/${ApiModule}/GetRawFeedCount`)
+    .get(api.getRawFeedCount);
+
+router
+.route(`/${ApiModule}/postScoreData`)
+.post(api.postScoreData);
+
+/* router
     .route(`/${ApiModule}s`)
     .get(api.getAll)
     .post(upload.single('file'), routeSanity.checkFile, api.addBulk)
     .put(routeSanity.checkData, upload.single('file'), routeSanity.checkFile, api.editBulk)
-    .delete(api.deleteBulk);
+    .delete(api.deleteBulk); */
 
 router.route(`/${ApiModule}s/search`)
     .get(api.search)
