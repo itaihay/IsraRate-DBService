@@ -54,16 +54,9 @@ let fields = {
 		search: true
 	},
 
-		isRaw: { 
-			type: Boolean, 
-			default: true,
-			mutable: true, 
-			search: true
-	},
-
-		score: { 
+		tag: { 
 			type: Number, 
-			default: 0,
+			default: -100,
 			mutable: true, 
 			search: true
 }

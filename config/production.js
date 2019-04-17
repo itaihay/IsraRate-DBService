@@ -4,7 +4,8 @@ var config = require('./global');
 
 //  ======[ DATABASE ]======
 
-config.db.credential.database = 'IsraRate';
+config.db.credential.database = 'IsraRateDB';
+config.db.credential.host = 'israratedb-cluster-eak9r.mongodb.net';
 
 config.db.options.createIndexes = false;
 config.db.options.poolSize = 10;
@@ -12,8 +13,8 @@ config.db.options.reconnectTries = Number.MAX_VALUE; // Never stop trying to rec
 config.db.options.reconnectInterval = 500; // Reconnect every 500ms
 
 //  ======[ ADDRESS ]======
-config.serverIp = '0.0.0.0';
-config.serverPort = 3000;
+config.serverIp = 'israratedb-cluster-eak9r.mongodb.net';
+config.serverPort = 27017;
 config.redisPort = 6379;
 
 //  ======[ ADMIN ]======
