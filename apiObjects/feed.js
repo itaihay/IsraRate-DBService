@@ -9,6 +9,7 @@ const debug = require('debug')('App:ApiObject:feed');
 //const l = require('../config').util;
 
 const csvReader = require('csvtojson');
+const _ = require('lodash');
 
 const ModelOptions = {
     mutable: Model.GetFieldsByOption('mutable'),
@@ -59,7 +60,25 @@ api.get = (isRaw, limit, fromDate, toDate) => {
         });
 };
 
-// Add (array)
+
+api.getScoreRange = (fromDate, toDate) => {
+    return Model.find({created_at: {$gte: fromDate, $lte: toDate}}).exec().then(function (docs, err) {
+        if (err) console.error('error occur while trying to find feed: \n' + err);
+        let feeds = docs.map(feed => feed._doc);
+        let daysScore = [];
+        feeds.forEach(feed => {
+            //TODO: change to real score field when created
+            daysScore.push({date: getStringFullYear(feed.created_at), score: 1});
+        });
+
+        // create scores array of dates with their scored data
+        return _(daysScore).groupBy('date')
+            .map((objs, key) => ({'date': key, 'score': _.sumBy(objs, 'score')}))
+            .value();
+    });
+};
+
+
 api.add = (data) => {
     return Model.insertMany(data);
 };
@@ -93,5 +112,9 @@ api.dataResultMap = (jsonObjArr) => {
         _ids: jsonObjArr.map(x => x._id)
     };
 };
+
+function getStringFullYear(date) {
+    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+}
 
 module.exports = api;
