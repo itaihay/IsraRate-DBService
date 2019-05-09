@@ -40,8 +40,7 @@ api.getScoredFeedDates = (req, res) => {
 
 // getRandomFeed
 api.getRandomFeed = (req, res) => {
-    var limit = (req.query.limit || 10) * 1;
-    ApiObj.get(false, limit,req.query.from,req.query.to)
+    ApiObj.getRandom(req.query.date)
         .then(data => res.status(200).json(l.res(false, data)))
         .catch(err => res.status(500).json(l.res(err, [])));
 };

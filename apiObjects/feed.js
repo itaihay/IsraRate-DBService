@@ -59,21 +59,71 @@ api.get = (isRaw, limit, fromDate, toDate) => {
             return res;
         });
 };
+// getRawFeed
+api.getRandom = (date) => {
+
+    let res = {
+        data: {}
+    };
+
+    let query = null;
+
+    if (!date) {
+        query = ([
+            { "$match": { "tag": { "$ne": -100 } } },
+            { "$sample": { size: 1 } }
+        ])
+    }
+    else {
+
+        let fromDate = new Date(date);
+        let toDate = new Date(date);
+
+        fromDate.setSeconds(1);
+        fromDate.setHours(0);
+        fromDate.setMinutes(0);
+
+
+        toDate.setHours(23);
+        toDate.setMinutes(59);
+        toDate.setSeconds(59);
+
+        query = ([
+            {
+                "$match": {
+                    "tag": { "$ne": -100 },
+                    "created_at": {
+                        "$gte": fromDate.toISOString(),
+                        "$lt": toDate.toISOString()
+                    }
+                }
+            },
+            { "$sample": { size: 1 } }
+        ]);
+    }
+    
+    return Model.aggregate(query)
+        .exec()
+        .then((list) => {
+            res.tweets = list;
+            return res;
+        });
+};
 
 
 api.getScoreRange = (fromDate, toDate) => {
-    return Model.find({created_at: {$gte: fromDate, $lte: toDate}}).exec().then(function (docs, err) {
+    return Model.find({ created_at: { $gte: fromDate, $lte: toDate } }).exec().then(function (docs, err) {
         if (err) console.error('error occur while trying to find feed: \n' + err);
         let feeds = docs.map(feed => feed._doc);
         let daysScore = [];
         feeds.forEach(feed => {
             //TODO: change to real score field when created
-            daysScore.push({date: getStringFullYear(feed.created_at), score: 1});
+            daysScore.push({ date: getStringFullYear(feed.created_at), score: 1 });
         });
 
         // create scores array of dates with their scored data
         return _(daysScore).groupBy('date')
-            .map((objs, key) => ({'date': key, 'score': _.sumBy(objs, 'score')}))
+            .map((objs, key) => ({ 'date': key, 'score': _.sumBy(objs, 'score') }))
             .value();
     });
 };
@@ -84,10 +134,10 @@ api.add = (data) => {
 };
 
 // PUT
-api.setTagArray = (dataArray) => { 
+api.setTagArray = (dataArray) => {
     return Promise.all(
         dataArray.map(updateData => {
-            
+
             Model.findOneAndUpdate({
                 id: updateData.id
             }, {
