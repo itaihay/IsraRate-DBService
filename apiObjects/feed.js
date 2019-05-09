@@ -79,22 +79,17 @@ api.getRandom = (date) => {
         let fromDate = new Date(date);
         let toDate = new Date(date);
 
-        fromDate.setSeconds(1);
-        fromDate.setHours(0);
-        fromDate.setMinutes(0);
-
-
-        toDate.setHours(23);
-        toDate.setMinutes(59);
-        toDate.setSeconds(59);
-
+        
+        fromDate.setHours(0,0,0,0);
+        toDate.setHours(23,59,59,59);
+        
         query = ([
             {
                 "$match": {
                     "tag": { "$ne": -100 },
                     "created_at": {
-                        "$gte": fromDate.toISOString(),
-                        "$lt": toDate.toISOString()
+                        "$gte": new Date(fromDate),
+                        "$lt": new Date(toDate)
                     }
                 }
             },
