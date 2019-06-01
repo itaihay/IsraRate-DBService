@@ -80,9 +80,9 @@ router
     router
     .route(`/${ApiModule}/GetRandomFeed`)
     .get(api.getRandomFeed);
-    
 
-router.get(`/${ApiModule}s/ScoreRange`, function (req, res) {
+
+router.get(`/${ApiModule}/ScoreRange`, function (req, res) {
     let fromDate = req.query.fromDate;
     let toDate   = req.query.toDate;
 
