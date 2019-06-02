@@ -38,6 +38,13 @@ api.getScoredFeedDates = (req, res) => {
         .catch(err => res.status(500).json(l.res(err, [])));
 };
 
+// getRandomFeed
+api.getRandomFeed = (req, res) => {
+    ApiObj.getRandom(req.query.date)
+        .then(data => res.status(200).json(l.res(false, data)))
+        .catch(err => res.status(500).json(l.res(err, [])));
+};
+
 // POST
 api.add = (req, res) => {
     ApiObj.add(req.body.data)
@@ -69,6 +76,10 @@ router
 router
     .route(`/${ApiModule}/GetScoredFeed`)
     .get(api.getScoredFeedDates);
+
+    router
+    .route(`/${ApiModule}/GetRandomFeed`)
+    .get(api.getRandomFeed);
     
 
 router.get(`/${ApiModule}s/ScoreRange`, function (req, res) {
