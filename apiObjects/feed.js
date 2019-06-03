@@ -125,7 +125,12 @@ api.getScoreRange = (fromDate, toDate) => {
 
 
 api.add = (data) => {
-    return Model.insertMany(data);
+    if(data)
+    {
+        return Model.insertMany(data);
+    }
+
+    throw "No Data!";
 };
 
 // PUT

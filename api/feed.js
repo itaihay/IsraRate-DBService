@@ -47,7 +47,7 @@ api.getRandomFeed = (req, res) => {
 
 // POST
 api.add = (req, res) => {
-    ApiObj.add(req.body.data)
+    ApiObj.add(req.body)
         .then(data => res.status(201).json(l.res(false, data)))
         .catch(err => res.status(500).json(l.res(err, null)));
 };
