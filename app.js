@@ -118,7 +118,7 @@ fs.readdirSync(routesPath).forEach(function (file) {
     app.use('/', require(routesPath + '/' + file));
 });
 
-// Bootstrap api
+// Bootstrap apis
 var apiPath = path.join(__dirname, 'api');
 fs.readdirSync(apiPath).forEach(function (file) {
     app.use('/api', require(apiPath + '/' + file));
@@ -149,7 +149,7 @@ var gracefulShutdown = function () {
     debug('Received kill signal, shutting down gracefully.');
 
     /*  UNCOMMENT IF USING AUTH
-  
+
     redis.close((err)=>{
 
       if(err){console.error('Redis Server Closing err : ',err);}
