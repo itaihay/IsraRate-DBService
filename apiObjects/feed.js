@@ -132,10 +132,8 @@ api.add = (data) => {
                 user_id: tweet.user.id_str,
                 text: tweet.text,
                 place: tweet.place,
-                created_at: tweet.created_at,
                 geo: tweet.geo,
-                likes: tweet.favorite_count,
-                comments: (tweet.in_reply_to_user_id_str ? tweet.in_reply_to_user_id_str.count : 0),
+                likes: (tweet.favorite_count ? tweet.favorite_count.count : 0),
                 tag: -100
             }));
 

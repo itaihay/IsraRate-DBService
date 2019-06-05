@@ -13,7 +13,7 @@ let fields = {
 	},
     
     user_id: { 
-		type: Number, 
+		type: String, 
 		mutable: true, 
 		search: true
 	},
