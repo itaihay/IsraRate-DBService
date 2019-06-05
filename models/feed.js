@@ -8,7 +8,8 @@ let fields = {
     id: { 
 		type: String, 
 		mutable: true, 
-		search: true
+		search: true,
+		unique: true
 	},
     
     user_id: { 

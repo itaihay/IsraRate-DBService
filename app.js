@@ -106,9 +106,10 @@ if ('production' === env) {
 
 app.set('view engine', 'html');
 app.use(methodOverride());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50MB'}));
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true,
+    limit: '50MB'
 }));
 
 // Bootstrap routes
