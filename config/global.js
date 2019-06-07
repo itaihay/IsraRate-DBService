@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
-
+var geoCountriesApi = require('../apiObjects/geoCountries');
 let config = exports = module.exports = {};
 
 config.util = require('./lib');
@@ -90,6 +90,11 @@ config.db.connect = () => {
             console.log('ERROR connecting to: ' + uristring + '. ' + err);
         } else {
             console.log('Successfully connected to: ' + uristring);
+
+            geoCountriesApi.get()
+                .then(function (data) {
+                    console.info(data);
+                })
         }
     });
 
