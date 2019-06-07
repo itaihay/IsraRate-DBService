@@ -38,7 +38,7 @@ let fields = {
 	},
     
     geo: { 
-		type: String, 
+		type: Array, 
 		mutable: true, 
 		search: true
 	},

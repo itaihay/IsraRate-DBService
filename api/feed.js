@@ -48,8 +48,20 @@ api.getRandomFeed = (req, res) => {
 // POST
 api.add = (req, res) => {
     ApiObj.add(req.body)
-        .then(data => res.status(201).json(l.res(false, data)))
-        .catch(err => res.status(500).json(l.res(err, null)));
+        .then(data => res.status(200).json(l.res(false, data)))
+        .catch(err => {
+                if(err.writeErrors.some(e => e.err.code !== 11000))
+                {
+                    console.error(err);
+
+                    res.status(500).json(l.res(err,null));
+                }
+                else
+                {
+                    res.status(200).json(l.res(false,err.result));
+                }
+            }
+        );
 };
 
 // PUT
