@@ -16,7 +16,7 @@ const _ = require('lodash');
 ========= [ CORE METHODS ] =========
 */
 
-// getRawFeed
+// get all geo countries
 api.get = () => {
     let query = null;
 
@@ -27,20 +27,35 @@ api.get = () => {
         });
 };
 
-api.add = (data) => {
-    if (data) {
-        let geoCountrie = countriesCollection.map(geoCountry => (
+api.add = (geoPlace, tag) => {
+    if (geoPlace) {
+        let geoCountry =
         {
-            id: geoCountry.id,
-            type: geoCountry.type,
-            properties: geoCountry.properties,
-            geometry: geoCountry.geometry,
-        }));
+            id: geoPlace.id,
+            type: "Feature",
+            properties: {name: geoPlace.country, scoreRange: tag != null ? tag: 0},
+            geometry: geoPlace.bounding_box,
+        };
 
-        return Model.insertMany(geoCountrie);
+        return Model.insertMany(geoCountry)
+            .then(newCountry => {
+                console.info(newCountry);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     throw "No Data!";
+};
+
+api.deleteOnce = () => {
+    Model.deleteMany({}, function (data, err) {
+        if (err) console.error(err);
+        else console.info("deleted");
+
+        console.log(data);
+    });
 };
 
 api.addOnce = () => {
@@ -114,4 +129,23 @@ api.addOnce = () => {
         console.info(e);
     }
 };
+
+api.handleNewGeoCountry = async (taggedTweet) => {
+    let geoPlace = taggedTweet.place;
+    if (geoPlace.country == null || taggedTweet.tag == null) {
+        throw "not valid data";
+    }
+
+    let updatedGeoCounty = await Model.findOneAndUpdate({"properties.name": {$eq: geoPlace.country}},
+        {$inc: {"properties.scoreRange": taggedTweet.tag}}, {new: true});
+    
+    if (!updatedGeoCounty) {
+        api.add(geoPlace);
+    }
+
+    // Model.findOneAndUpdate({"properties.name": {$eq: geoPlace.country}},
+    //     {$inc: {"properties.scoreRange": taggedTweet.tag}}, {new: true})
+    //     .then((geo) => {console.log(geo)});
+};
+
 module.exports = api;

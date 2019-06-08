@@ -16,6 +16,8 @@ const ModelOptions = {
     search: Model.GetFieldsByOption('search'),
 };
 
+const geoApi = require('./geo');
+
 
 /*
 ========= [ CORE METHODS ] =========
@@ -155,11 +157,15 @@ api.setTagArray = (dataArray) => {
             }, {
                     $set: { "tag": updateData.tag }
                 }, {
-                    new: true
+
                 })
                 .then(data => {
                     (data.toObject() || null);
                 });
+
+            if (updateData.place != null && updateData.tag !== 0) {
+                let promise = geoApi.handleNewGeoCountry(updateData);
+            }
         })
     );
 };
