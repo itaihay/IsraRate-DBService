@@ -16,8 +16,6 @@ const ModelOptions = {
     search: Model.GetFieldsByOption('search'),
 };
 
-const geoApi = require('./geo');
-
 
 /*
 ========= [ CORE METHODS ] =========
