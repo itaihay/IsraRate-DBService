@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
-
+var geoCountriesApi = require('../apiObjects/geo');
 let config = exports = module.exports = {};
 
 config.util = require('./lib');
