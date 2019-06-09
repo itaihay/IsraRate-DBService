@@ -2,7 +2,7 @@
 
 // Dependencies
 const mongoose = require('mongoose'),
-    Model = mongoose.models.Feed,
+    Model = require('../models/feed'),
     api = {};
 
 const debug = require('debug')('App:ApiObject:feed');
@@ -109,13 +109,13 @@ api.getRandom = (date) => {
 
 
 api.getScoreRange = (fromDate, toDate) => {
-    return Model.find({ created_at: { $gte: fromDate, $lte: toDate } }).exec().then(function (docs, err) {
+    return Model.find({ created_at: { $gte: fromDate, $lte: toDate }, tag: {$ne: -100} }).exec().then(function (docs, err) {
         if (err) console.error('error occur while trying to find feed: \n' + err);
         let feeds = docs.map(feed => feed._doc);
         let daysScore = [];
         feeds.forEach(feed => {
             //TODO: change to real score field when created
-            daysScore.push({ date: getStringFullYear(feed.created_at), score: 1 });
+            daysScore.push({ date: getStringFullYear(feed.created_at), score: feed.tag });
         });
 
         // create scores array of dates with their scored data
