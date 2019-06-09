@@ -3,15 +3,14 @@
 // Dependencies
 const mongoose = require('mongoose'),
     api = {};
-
 const Model = require('../models/geoCountries');
 const debug = require('debug')('App:ApiObject:geoCountries');
-
+const feedApi = require('./feed');
 const csvReader = require('csvtojson');
-const _ = require('lodash');
+const cron = require('node-cron');
 
-
-
+const TWO_DAYS_INTERVAL = 48;
+const ONE_DAY_INTERVAL  = 24;
 /*
 ========= [ CORE METHODS ] =========
 */
@@ -27,26 +26,26 @@ api.get = () => {
         });
 };
 
-api.add = (geoPlace, tag) => {
-    if (geoPlace) {
+api.add = (placedTweet, tag) => {
+    if (placedTweet && !api.isForbiddenCountry(placedTweet.place)) {
         let geoCountry =
         {
-            id: geoPlace.id,
+            id: placedTweet.id,
             type: "Feature",
-            properties: {name: geoPlace.country, scoreRange: tag != null ? tag: 0},
-            geometry: geoPlace.bounding_box,
+            properties: {name: placedTweet.place, scoreRange: tag != null ? tag: 0},
+                geometry: {type: "Polygon", coordinates: placedTweet.geo},
         };
 
         return Model.insertMany(geoCountry)
             .then(newCountry => {
-                console.info(newCountry);
+                console.info(newCountry + " created successfully");
             })
             .catch(err => {
                 console.error(err);
             });
+    } else {
+        console.warn("add new country rejected for no sut data");
     }
-
-    throw "No Data!";
 };
 
 api.deleteOnce = () => {
@@ -130,22 +129,61 @@ api.addOnce = () => {
     }
 };
 
-api.handleNewGeoCountry = async (taggedTweet) => {
+api.handleNewGeoCountry = (taggedTweet) => {
     let geoPlace = taggedTweet.place;
-    if (geoPlace.country == null || taggedTweet.tag == null) {
+    if (geoPlace == null || taggedTweet.tag == null) {
         throw "not valid data";
     }
 
-    let updatedGeoCounty = await Model.findOneAndUpdate({"properties.name": {$eq: geoPlace.country}},
-        {$inc: {"properties.scoreRange": taggedTweet.tag}}, {new: true});
-    
-    if (!updatedGeoCounty) {
-        api.add(geoPlace);
-    }
+    Model.findOneAndUpdate({"properties.name": {$eq: geoPlace}},
+        {$inc: {"properties.scoreRange": taggedTweet.tag}}, {new: true})
+        .then(updatedGeoCounty => {
+            if (!updatedGeoCounty) {
+                api.add(taggedTweet);
+            } else {
+                console.info(updatedGeoCounty.toObject().properties.name + " updated successfully");
+            }
+        });
 
     // Model.findOneAndUpdate({"properties.name": {$eq: geoPlace.country}},
     //     {$inc: {"properties.scoreRange": taggedTweet.tag}}, {new: true})
     //     .then((geo) => {console.log(geo)});
 };
 
-module.exports = api;
+cron.schedule('*/1 * * * *', api.handleGeoPlaces = () => {
+    console.info('scheduling handle geo places: ' + Date.now());
+    api.handleGeoPlaces();
+}, {});
+
+api.handleGeoPlaces = () => {
+    let toDate   = new Date(Date.now());
+    let fromDate = new Date(Date.now());
+    fromDate.setHours(fromDate.getHours() - TWO_DAYS_INTERVAL);
+    toDate.setHours(toDate.getHours() - ONE_DAY_INTERVAL);
+
+
+    feedApi.get(false, 500, fromDate, toDate).then(data => {
+        let placedTweets = data.tweets.map(tweet => tweet.toObject()).filter(tweet => tweet.place != null);
+
+        placedTweets.forEach(placedTweet => {
+            try {
+                let status = api.handleNewGeoCountry(placedTweet);
+                console.info("handling new country finished successfully with status: " + status);
+            }
+            catch (err) {
+                console.error(err);
+            }
+
+        })
+    });
+};
+
+// some countries has more specific map indication. so they are forbidden to be inserted
+api.isForbiddenCountry = (countryName) => {
+    if (countryName === "United States")
+        return true;
+
+    return false;
+}
+
+    module.exports = api;
