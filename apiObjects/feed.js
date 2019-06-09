@@ -133,15 +133,13 @@ api.add = (data) => {
                 id: tweet.id_str,
                 user_id: tweet.user.id_str,
                 text: tweet.text,
-                place: tweet.place,
-                created_at: tweet.created_at,
-                geo: tweet.geo,
-                likes: tweet.favorite_count,
-                comments: (tweet.in_reply_to_user_id_str ? tweet.in_reply_to_user_id_str.count : 0),
+                place: (tweet.place ? tweet.place.country : null),
+                geo: (tweet.place ? tweet.place.bounding_box.coordinates : null),
+                likes: (tweet.favorite_count ? tweet.favorite_count : 0),
                 tag: -100
             }));
 
-        return Model.insertMany(newData);
+        return Model.insertMany(newData, { ordered: false });
     }
 
     throw "No Data!";
@@ -149,25 +147,33 @@ api.add = (data) => {
 
 // PUT
 api.setTagArray = (dataArray) => {
-    return Promise.all(
-        dataArray.map(updateData => {
+    // return Promise.all(
+    //     dataArray.map(updateData => {
 
-            Model.findOneAndUpdate({
-                id: updateData.id
-            }, {
-                    $set: { "tag": updateData.tag }
-                }, {
+    //         Model.findOneAndUpdate({
+    //             id: updateData.id
+    //         }, {
+    //                 $set: { "tag": updateData.tag }
+    //             }, {
+    //                 new: true
+    //             })
+    //             .then(data => {
+    //                 (data.toObject() || null);
+    //             });
+    //     })
+    // );
 
-                })
-                .then(data => {
-                    (data.toObject() || null);
-                });
+    var bulk = Model.collection.initializeUnorderedBulkOp();
 
-            if (updateData.place != null && updateData.tag !== 0) {
-                let promise = geoApi.handleNewGeoCountry(updateData);
-            }
-        })
-    );
+    dataArray.forEach(item => {
+
+        bulk.find( { id: item.id }).update({
+            $set: { "tag": item.tag }
+        });
+
+    });
+
+    return bulk.execute();
 };
 
 /*

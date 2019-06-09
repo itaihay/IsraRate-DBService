@@ -13,7 +13,7 @@ let fields = {
 	},
     
     user_id: { 
-		type: Number, 
+		type: String, 
 		mutable: true, 
 		search: true
 	},
@@ -38,7 +38,7 @@ let fields = {
 	},
     
     geo: { 
-		type: String, 
+		type: Array, 
 		mutable: true, 
 		search: true
 	},
