@@ -133,8 +133,8 @@ api.add = (data) => {
                 id: tweet.id_str,
                 user_id: tweet.user.id_str,
                 text: tweet.text,
-                place: (tweet.place ? tweet.place.country : null),
-                geo: (tweet.place ? tweet.place.bounding_box.coordinates : null),
+                place: ((tweet.place && (tweet.place.place_type === "country")) ? tweet.place.country : null),
+                geo: ((tweet.place && (tweet.place.place_type === "country")) ? tweet.place.bounding_box.coordinates : null),
                 likes: (tweet.favorite_count ? tweet.favorite_count : 0),
                 tag: -100
             }));
