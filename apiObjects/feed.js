@@ -131,6 +131,10 @@ api.getScoreRange = (fromDate, toDate) => {
                 {
                     $gte: new Date(fromDate),
                     $lte: new Date(toDate)
+                },
+                tag:
+                {
+                    $ne: -100
                 }
             }
         }
