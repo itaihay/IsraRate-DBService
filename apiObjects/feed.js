@@ -164,7 +164,10 @@ api.getScoreRange = (fromDate, toDate) => {
                
                
              }
-       }
+       },
+       {
+            $sort: {date: 1}
+        }
     ];
         
         return Model.aggregate(query);
