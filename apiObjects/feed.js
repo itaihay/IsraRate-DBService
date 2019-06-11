@@ -107,20 +107,68 @@ api.getRandom = (date) => {
 
 
 api.getScoreRange = (fromDate, toDate) => {
-    return Model.find({ created_at: { $gte: fromDate, $lte: toDate }, tag: {$ne: -100} }).exec().then(function (docs, err) {
-        if (err) console.error('error occur while trying to find feed: \n' + err);
-        let feeds = docs.map(feed => feed._doc);
-        let daysScore = [];
-        feeds.forEach(feed => {
-            //TODO: change to real score field when created
-            daysScore.push({ date: getStringFullYear(feed.created_at), score: feed.tag });
-        });
+    // return Model.find({ created_at: { $gte: fromDate, $lte: toDate }, tag: {$ne: -100} }).exec().then(function (docs, err) {
+    //     if (err) console.error('error occur while trying to find feed: \n' + err);
+    //     let feeds = docs.map(feed => feed._doc);
+    //     let daysScore = [];
+    //     feeds.forEach(feed => {
+    //         //TODO: change to real score field when created
+    //         daysScore.push({ date: getStringFullYear(feed.created_at), score: feed.tag });
+    //     });
 
-        // create scores array of dates with their scored data
-        return _(daysScore).groupBy('date')
-            .map((objs, key) => ({ 'date': key, 'score': _.sumBy(objs, 'score') }))
-            .value();
-    });
+    //     // create scores array of dates with their scored data
+    //     return _(daysScore).groupBy('date')
+    //         .map((objs, key) => ({ 'date': key, 'score': _.sumBy(objs, 'score') }))
+    //         .value();
+    // });
+    let query =
+     
+    [
+        {
+            $match:
+            {
+                created_at: 
+                {
+                    $gte: new Date(fromDate),
+                    $lte: new Date(toDate)
+                }
+            }
+        }
+        ,
+       {
+         $addFields: {
+            newTag: { $toDouble: "$tag" },
+            dateStr: 
+                {
+                    $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: '$created_at'
+                    }
+                }
+       }},
+       {
+         $group:
+             {
+               _id: { 
+                        date: 
+                        {
+                            $dateToString: {
+                                format: "%Y-%m-%d",
+                                date: '$created_at'
+                            }
+                        }
+                },
+               score: { $sum: "$newTag"},
+               count: { $sum: 1 },
+               date: { $first: "$dateStr" }
+               
+               
+             }
+       }
+    ];
+        
+        return Model.aggregate(query);
+
 };
 
 
