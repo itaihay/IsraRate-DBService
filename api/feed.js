@@ -98,16 +98,16 @@ router.get(`/${ApiModule}/ScoreRange`, function (req, res) {
     let fromDate = req.query.fromDate;
     let toDate   = req.query.toDate;
 
-    if (fromDate) {
-        fromDate = Date.parse(fromDate);
-        if (toDate) {
-            toDate = Date.parse(toDate);
-        } else {
-            toDate = Date.now();
-        }
-    }
+    // if (fromDate) {
+    //     fromDate = Date.parse(fromDate);
+    //     if (toDate) {
+    //         toDate = Date.parse(toDate);
+    //     } else {
+    //         toDate = Date.now();
+    //     }
+    // }
 
-    if (isNaN(fromDate) || isNaN(toDate)) {
+    if (!(fromDate) || !(toDate)) {
         res.sendStatus(400);
     } else {
         ApiObj.getScoreRange(fromDate, toDate)
