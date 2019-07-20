@@ -11,7 +11,7 @@ config.util = require('./lib');
 config.db = {
     credential: {
         database: 'admin',
-        host: 'israratedb-cluster-eak9r.mongodb.net',
+        host: 'localhost',
         user: 'IsraRateDBAdmin',
         pw: 'Aa123123',
         port: 27017
