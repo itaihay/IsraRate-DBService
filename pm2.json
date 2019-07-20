@@ -1,0 +1,10 @@
+{
+    "apps" : {
+      "name":       "IsraRateDB",
+      "version":    "1.0.0",
+      "script":     "app.js",
+      "instances":        3,
+      "max_memory_restart" : "800M",
+      "exec_mode":  "cluster_mode"
+    }
+  }
