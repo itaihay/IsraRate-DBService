@@ -13,8 +13,8 @@ config.db.options.reconnectTries = Number.MAX_VALUE; // Never stop trying to rec
 config.db.options.reconnectInterval = 500; // Reconnect every 500ms
 
 //  ======[ ADDRESS ]======
-config.serverIp = 'israratedb-cluster-eak9r.mongodb.net';
-config.serverPort = 27017;
+config.serverIp = '0.0.0.0';
+config.serverPort = 80;
 config.redisPort = 6379;
 
 //  ======[ ADMIN ]======

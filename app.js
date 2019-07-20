@@ -134,6 +134,7 @@ app.use(function (req, res) {
 // Start server
 server = app.listen(
     config.address.serverPort,
+    config.serverIp,
     () => {
         debug(
             'Express server listening at localhost:%d in %s mode',

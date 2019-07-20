@@ -11,8 +11,8 @@ config.db.options.createIndexes = true;
 config.db.options.poolSize = 10;
 
 //  ======[ ADDRESS ]======
-config.serverIp = 'israratedb-cluster-eak9r.mongodb.net';
-config.serverPort = 27017;
+config.serverIp = '0.0.0.0';
+config.serverPort = 80;
 config.redisPort = 6379;
 
 //  ======[ ADMIN ]======
