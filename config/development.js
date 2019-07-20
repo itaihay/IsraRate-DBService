@@ -5,7 +5,7 @@ var config = require('./global');
 //  ======[ DATABASE ]======
 
 config.db.credential.database = 'IsraRateDB';
-config.db.credential.host = 'israratedb-cluster-eak9r.mongodb.net';
+config.db.credential.host = 'localhost';
 
 config.db.options.createIndexes = true;
 config.db.options.poolSize = 10;
