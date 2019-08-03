@@ -11,7 +11,7 @@ config.util = require('./lib');
 config.db = {
     credential: {
         database: 'admin',
-        host: 'localhost',
+        host: 'israratedb-cluster-eak9r.mongodb.net',
         user: 'IsraRateDBAdmin',
         pw: 'Aa123123',
         port: 27017
@@ -83,7 +83,7 @@ config.db.connect = () => {
     let dbStr = config.db.credential;
     var port = (dbStr.port.length > 0) ? ':' + dbStr.port : '';
     var login = (dbStr.user.length > 0) ? dbStr.user + ':' + dbStr.pw + '@' : '';
-    var uristring = 'mongodb://' + login + dbStr.host + port + '/' + dbStr.database + '?retryWrites=true';
+    var uristring = 'mongodb+srv://' + login + dbStr.host + port + '/' + dbStr.database + '?retryWrites=true';
 
     mongoose.connect(uristring, config.db.options, function (err) {
         if (err) {
