@@ -69,10 +69,26 @@ api.getRandom = (date) => {
     let query = null;
 
     if (!date) {
-        query = ([
-            { "$match": { "tag": { "$ne": -100 } } },
-            { "$sample": { size: 1 } }
-        ])
+        query = (
+            [
+                { 
+                    "$match": 
+                    {
+                        "$or": [
+                            { 
+                                "tag": { "$eq": 1 }
+                            },
+                            { 
+                                "tag": { "$eq": -1 }
+                            }
+                        ]
+                    } 
+                },
+                { 
+                    "$sample": { size: 1 } 
+                }
+            ]
+        )
     }
     else {
 
@@ -86,11 +102,22 @@ api.getRandom = (date) => {
         query = ([
             {
                 "$match": {
-                    "tag": { "$ne": -100 },
-                    "created_at": {
-                        "$gte": new Date(fromDate),
-                        "$lt": new Date(toDate)
-                    }
+                    "$and": [
+                        {"$or": [
+                            {
+                                "tag": { "$eq": 1 }
+                            },
+                            {
+                                "tag": { "$eq": -1 }
+                            }
+                        ]},
+                        {
+                            "created_at": {
+                                "$gte": new Date(fromDate),
+                                "$lt": new Date(toDate)
+                            }
+                        }
+                    ]
                 }
             },
             { "$sample": { size: 1 } }
